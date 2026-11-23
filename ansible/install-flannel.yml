@@ -1,0 +1,21 @@
+---
+- name: Install Flannel CNI
+  hosts: kubernetes_control_plane
+  become: yes
+
+  tasks:
+    - name: Download Flannel manifest
+      ansible.builtin.get_url:
+        url: https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+        dest: /tmp/kube-flannel.yml
+        mode: '0644'
+
+    - name: Apply Flannel manifest
+      ansible.builtin.command:
+        cmd: kubectl apply -f /tmp/kube-flannel.yml
+      register: flannel_result
+      changed_when: "'created' in flannel_result.stdout or 'configured' in flannel_result.stdout"
+
+    - name: Display result
+      ansible.builtin.debug:
+        var: flannel_result.stdout_lines

@@ -1,0 +1,19 @@
+---
+- name: Install Git on Jenkins Server
+  hosts: jenkins_servers
+  become: yes
+
+  tasks:
+    - name: Install Git
+      ansible.builtin.dnf:
+        name: git
+        state: present
+
+    - name: Verify Git installation
+      ansible.builtin.command: git --version
+      register: git_version
+      changed_when: false
+
+    - name: Display Git version
+      ansible.builtin.debug:
+        msg: "{{ git_version.stdout }}"

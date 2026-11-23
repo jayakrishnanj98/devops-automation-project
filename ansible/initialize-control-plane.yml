@@ -1,0 +1,38 @@
+---
+- name: Initialize Kubernetes Control Plane
+  hosts: kubernetes_control_plane
+  become: yes
+
+  tasks:
+    - name: Initialize Kubernetes cluster using kubeadm
+      ansible.builtin.command: >
+        kubeadm init
+        --apiserver-advertise-address=172.31.24.129
+        --pod-network-cidr=10.244.0.0/16
+      args:
+        creates: /etc/kubernetes/admin.conf
+
+    - name: Create .kube directory for root
+      ansible.builtin.file:
+        path: /root/.kube
+        state: directory
+        mode: '0755'
+
+    - name: Copy Kubernetes admin configuration
+      ansible.builtin.copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /root/.kube/config
+        remote_src: yes
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Verify Kubernetes control plane
+      ansible.builtin.command: kubectl get nodes
+      register: node_status
+      changed_when: false
+
+    - name: Display control plane status
+      ansible.builtin.debug:
+        var: node_status.stdout_lines
+
