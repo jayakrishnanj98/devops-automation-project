@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -6,9 +7,11 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout') {
             steps {
-                echo 'Checking out project from GitHub'
+                checkout scm
+                echo 'Source code checked out from GitHub'
             }
         }
 
@@ -27,7 +30,7 @@ pipeline {
             }
         }
 
-        stage('Login and Push to Docker Hub') {
+        stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-credentials',
@@ -45,11 +48,23 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                    /usr/local/bin/kubectl set image deployment/php-nginx-app \
+                    copy-app-files=${DOCKER_IMAGE}:${BUILD_NUMBER} \
+                    php=${DOCKER_IMAGE}:${BUILD_NUMBER}
+
+                    /usr/local/bin/kubectl rollout status deployment/php-nginx-app
+                '''
+            }
+        }
     }
 
     post {
         success {
-            echo 'Docker image pushed successfully!'
+            echo 'Docker image pushed and Kubernetes deployment updated!'
         }
         failure {
             echo 'Pipeline failed. Check the console output.'
