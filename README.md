@@ -17,10 +17,6 @@ An end-to-end DevOps automation project designed to automate infrastructure prov
 - Prometheus
 - Grafana
 
-## Project Architecture
-
-Completed
-
 ## Project Status
 
 Completed
