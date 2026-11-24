@@ -12,15 +12,15 @@ An end-to-end DevOps automation project designed to automate infrastructure prov
 - Jenkins
 - Git and GitHub
 - Docker
-- Kubernetes (K3s)
+- Kubernetes
 - GitHub Actions
 - Prometheus
 - Grafana
 
 ## Project Architecture
 
-Coming soon...
+Completed
 
 ## Project Status
 
-Currently under development.
+Completed
