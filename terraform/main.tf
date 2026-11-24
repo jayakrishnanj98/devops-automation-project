@@ -30,6 +30,11 @@ data "aws_subnets" "default" {
   }
 }
 
+variable "my_ip" {
+  description = "Trusted public IP address"
+  type        = string
+}
+
 resource "aws_security_group" "devops_sg" {
   name        = "devops-project-sg"
   description = "Security group for Jenkins and K3s cluster"
@@ -41,7 +46,7 @@ resource "aws_security_group" "devops_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["49.205.100.25/32"]
+    cidr_blocks = [var.my_ip]
   }
 
   # Jenkins web interface
@@ -50,7 +55,7 @@ resource "aws_security_group" "devops_sg" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["49.205.100.25/32"]
+    cidr_blocks = [var.my_ip]
   }
 
   # Kubernetes internal communication
