@@ -91,7 +91,7 @@ resource "aws_security_group" "devops_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["49.205.100.25/32"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
