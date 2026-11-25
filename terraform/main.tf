@@ -131,9 +131,9 @@ data "aws_ami" "amazon_linux" {
 locals {
   instance_names = [
     "jenkins",
-    "k3s-master",
-    "k3s-worker-1",
-    "k3s-worker-2"
+    "kubernetes-master",
+    "kubernetes-worker-1",
+    "kubernetes-worker-2"
   ]
 }
 
